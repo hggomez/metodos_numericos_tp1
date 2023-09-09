@@ -1,3 +1,5 @@
+import copy
+
 class SystemOfEquations:
   def __init__(self, matrix: [[float]], independent_terms: [float]):
     self.augmented_matrix = matrix
@@ -50,10 +52,10 @@ class SystemOfEquations:
 
 class tridiagonalSOE:
   def __init__(self, a: [float], b: [float], c: [float], d: [float]):
-    self.a = a # we assume a[0] = 0
-    self.b = b 
-    self.c = c # we assume c[n-1] = 0
-    self.d = d
+    self.a = copy.deepcopy(a) # we assume a[0] = 0
+    self.b = copy.deepcopy(b)
+    self.c = copy.deepcopy(c) # we assume c[n-1] = 0
+    self.d = copy.deepcopy(d)
     self.k = [1 * i for i in range(len(a))]
     self.n = len(a)
 
@@ -73,78 +75,9 @@ class tridiagonalSOE:
     return x
   
   def set_new_d(self, d: [float]):
-    self.d = d
+    self.d = copy.deepcopy(d)
     for i in range(1, self.n):
       self.d[i] = self.d[i] - (self.k[i] * self.d[i-1])
 
   def __str__(self):
     return "a: " + str(self.a) + "\nb: " + str(self.b) + "\nc: " + str(self.c) + "\nd: " + str(self.d)
-
-print("=== PLAIN GAUSSIAN ===")
-soe = SystemOfEquations([[1,2,3],[4,2,2],[1,1,1]], [6,6,6])
-soe.plain_gaussian_elimination()
-print("SOE: ")
-print(soe)
-print("Solution: ")
-print(soe.backward_substitution())
-
-try:
-  soe = SystemOfEquations([[0,2,3],[4,2,2],[1,1,1]], [6,6,6])
-  soe.plain_gaussian_elimination()
-  print("\nSOE with [0][0] zero: ")
-  print(soe)
-  print("Solution: ")
-  print(soe.backward_substitution())
-except ZeroDivisionError:
-  print("ERROR: Division by zero")
-
-soe = SystemOfEquations([[4,2,2],[0,2,3],[1,1,1]], [6,6,6])
-soe.plain_gaussian_elimination()
-print("\nSOE with [1][0] zero: ")
-print(soe)
-print("Solution: ")
-print(soe.backward_substitution())
-
-print("\n=== PARTIAL PIVOTING GAUSSIAN ===")
-soe = SystemOfEquations([[1,2,3],[4,2,2],[1,1,1]], [6,6,6])
-soe.partial_pivoting_gaussian_elimination()
-print("SOE: ")
-print(soe)
-print("Solution: ")
-print(soe.backward_substitution())
-
-soe = SystemOfEquations([[0,2,3],[4,2,2],[1,1,1]], [6,6,6])
-soe.partial_pivoting_gaussian_elimination()
-print("\nSOE with [0][0] zero: ")
-print(soe)
-print("Solution: ")
-print(soe.backward_substitution())
-
-soe = SystemOfEquations([[4,2,2],[0,2,3],[1,1,1]], [6,6,6])
-soe.partial_pivoting_gaussian_elimination()
-print("\nSOE with [1][0] zero: ")
-print(soe)
-print("Solution: ")
-print(soe.backward_substitution())
-
-print("\n=== TRIDIAGONAL SOE ===")
-print(f"A:\n[1,2,0]\n[3,4,5]\n[0,6,7]")
-print("\nSolutions for [6, 6, 6]: ")
-soe = SystemOfEquations([[1,2,0],[3,4,5],[0,6,7]], [6,6,6])
-soe.plain_gaussian_elimination()
-print("SystemOfEquations class: ", end="")
-print(soe.backward_substitution())
-print("Tridiagonal class: ", end="")
-triag_soe = tridiagonalSOE([0,3,6], [1,4,7], [2,5,0], [6,6,6])
-triag_soe.plain_gaussian_elimination()
-print(triag_soe.backward_substitution())
-
-print("\nSolutions for [10, 10, 10]: ")
-soe_2 = SystemOfEquations([[1,2,0],[3,4,5],[0,6,7]], [10,10,10])
-soe_2.plain_gaussian_elimination()
-print("SystemOfEquations class: ", end="")
-print(soe_2.backward_substitution())
-print("Tridiagonal class, using set_new_d: ", end="")
-triag_soe.set_new_d([10,10,10])
-print(triag_soe.backward_substitution())
-print()
