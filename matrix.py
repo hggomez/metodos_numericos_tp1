@@ -56,7 +56,7 @@ class tridiagonalSOE:
     self.b = copy.deepcopy(b)
     self.c = copy.deepcopy(c) # we assume c[n-1] = 0
     self.d = copy.deepcopy(d)
-    self.k = [1 * i for i in range(len(a))]
+    self.k = [i for i in range(len(a))]
     self.n = len(a)
 
   def plain_gaussian_elimination(self):
